@@ -1,10 +1,11 @@
-import UserProvider from "../provider/UserProvider.js";
+const UserProvider = require("../provider/UserProvider.js");
 
 class UserController {
 
     getUsers = async (req, res) => {
         const data = await UserProvider.getUsers();
         res.send({ data: data })
+        console.log("Change")
     }
 
     addUser = (req, res) => {
@@ -17,5 +18,12 @@ class UserController {
     }
 }
 
-export default new UserController()
+
+
+// const getUsers = async (req, res) => {
+//     // const data = await UserProvider.getUsers();
+//     res.send({ data: data })
+// }
+
+module.exports = new UserController();
 
