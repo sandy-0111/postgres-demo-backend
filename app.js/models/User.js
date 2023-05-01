@@ -1,21 +1,22 @@
-import { sequelize } from '../models/index.js'
-import { Sequelize } from 'sequelize';
-export default function UserModel() {
+import { DataTypes } from "sequelize";
+import { sequelize } from "./index.js";
+
+export default function() {
 
     const User = sequelize.define("users", {
         user_id: {
-            type: Sequelize.SMALLINT,
-            autoIncrement:true,
+            type: DataTypes.SMALLINT,
+            autoIncrement: true,
             primaryKey: true,
         },
         user_firstname: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         user_lastname: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         user_email: {
-            type: Sequelize.BOOLEAN
+            type: DataTypes.BOOLEAN
         }
     }, {
         timestamps: false
