@@ -1,36 +1,31 @@
 import db from '../models/index.js'
 
 class UserProvider {
-    getUsers = async () => {
-        const users = await db.user().findAll();
-        return users;
+
+    getAllusers = (data = {}) => {
+        return db.user().findAll({
+            ...data
+        })
+    };
+
+    getUserById = (condition) => {
+        return db.user().findOne({ where: condition });;
     }
 
-    getUserById = async (id) => {
-        const user = await db.user().findOne({ where: { user_id: id } });
-        return user;
+    createUser = (payload) => {
+        return db.user().create(payload)
     }
 
-    postUsers = async (payload) => {
-        const users = await db.user().create(payload)
-        return users;
-    }
-
-    removeUser = async (id) => {
-        const users = await db.user().destroy({
-            where: { user_id: id }
+    removeUser = (condition) => {
+        return db.user().destroy({
+            where: condition
         });
-        return users;
     }
 
-    updateUser = async (payload, condition) => {
-        try {
-            const user = await db.user().update(payload, {
-                where: condition
-            })
-        } catch (error) {
-            console.log('error', error)
-        }
+    updateUser = (payload, condition) => {
+        return  db.user().update(payload, {
+            where: condition
+        })
     }
 }
 export default new UserProvider()

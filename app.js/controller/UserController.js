@@ -1,38 +1,103 @@
+import generalResponse from "../helper/generate-response.helper.js";
 import UserProvider from "../provider/UserProvider.js";
 
 class UserController {
 
     getUsers = async (req, res) => {
-        const data = await UserProvider.getUsers();
-        res.send({ data: data })
+        try {
+            const userData = await UserProvider.getAllusers();
+            return generalResponse(res, userData)
+        } catch (error) {
+            return generalResponse(
+                res,
+                error,
+                "Something went wrong!!",
+                "error",
+                false,
+                200
+            )
+        }
     }
     getUserById = async (req, res) => {
-        const {id } = req.params;
-        const data = await UserProvider.getUserById(id);
-        res.send({ data: data })
+        try {
+            const where = { user_id: req.params.id }
+            const userDetail = await UserProvider.getUserById(where);
+            if (userDetail) {
+                return generalResponse(res, userDetail);
+            } else {
+                return generalResponse(res, null, "user not found", "error", true, 200);
+            }
+        } catch (e) {
+            return generalResponse(
+                res,
+                e,
+                "Something went wrong!!",
+                "error",
+                false,
+                200
+            );
+        }
     }
 
-    addUser = (req, res) => {
-        const payload = req.body;
-        const data = UserProvider.postUsers(payload);
-        if (data)
-            res.status(200).send({ message: 'Successfully saved' })
-        else
-            res.send({ message: 'something is wrong' })
+    createUser = async (req, res) => {
+        try {
+            const payload = req.body;
+            const user = await UserProvider.createUser(payload);
+            return generalResponse(res, user, "User created successfully");
+        } catch (e) {
+            return generalResponse(
+                res,
+                e,
+                "Something went wrong!!",
+                "error",
+                false,
+                200
+            );
+        }
     }
 
     deleteUser = async (req, res) => {
-        console.log(req);
-        const { id } = req.params;
-        const data = await UserProvider.removeUser(id);
-        res.send({ data: data })
+        try {
+            const where = { user_id: req.params.id }
+            await UserProvider.removeUser(where);
+            return generalResponse(
+                res,
+                null,
+                "user deleted successfully",
+                "success",
+                true
+            );
+        } catch (e) {
+            return generalResponse(
+                res,
+                e,
+                "Something went wrong!!",
+                "error",
+                false,
+                200
+            );
+        }
+
+
     }
 
     updateUser = async (req, res) => {
-        const payload = req.body;
-        const { id } = req.params
-        const data = await UserProvider.updateUser(payload, { user_id: id });
-        res.send({ data: data });
+        try {
+            const payload = req.body;
+            const where = { user_id: req.params.id }
+            await UserProvider.updateUser(payload, where);
+            return generalResponse(res, null, "user updated successfully");
+
+        } catch (e) {
+            return generalResponse(
+                res,
+                e,
+                "Something went wrong!!",
+                "error",
+                false,
+                200
+            );
+        }
     }
 }
 
